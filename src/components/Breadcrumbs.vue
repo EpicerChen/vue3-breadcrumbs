@@ -1,51 +1,49 @@
 <template>
-    <span v-for="(el, i) in nameDictionary != {} ? map(node) : node" :key="i">
-        <span v-if="i > 0" v-html="symbol" />
-        <button @click="goTo(i)">{{ el }}</button>
+    <span class="breadcrumbs" :class="'breadcrumbs-' + i"
+        v-for="(el, i) in nameDictionary != undefined ? map(node, nameDictionary) : node" :key="i">
+        <span class="symbol" v-if="i > 0" v-html="symbol" />
+        <button class="item" @click="goTo(i)">
+            {{ el == "" ? "/" : el }}
+        </button>
     </span>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, toRefs } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import { RouteLocationNormalizedLoaded, Router } from "vue-router";
 
-export default defineComponent({
-    name: "Breadcrumbs",
-    props: {
-        path: {
-            type: String,
-            unique: true,
-            default: ''
-        },
-        router: {
-            type: Object as PropType<Router>,
-            unique: true,
-        },
-         symbol: {
-            type: String,
-            unique: false,
-            default: '>>'
-        },
-        nameDictionary: {
-            type: Object as PropType<{ [key: string]: string }>,
-            unique: false,
-            default: {}
-        }
-    },
-    setup(props) {
-        const { path } = toRefs(props)
-        const node: string[] = path.value.split("/");
+const props = withDefaults(
+    defineProps<{
+        route: RouteLocationNormalizedLoaded;
+        router: Router;
+        symbol?: string;
+        nameDictionary?: {
+            [key: string]: string
+        };
+    }>(),
+    {
+        symbol: " > ",
+    })
 
-        const map = (items: string[]) =>
-            items.map((el) => props.nameDictionary[el] != undefined
-                ? props.nameDictionary[el] : el)
+const fullpath = computed(() => { return props.route.fullPath })
+const node = computed(() =>
+    fullpath.value == "/" ? [""] : fullpath.value.split("/"))
 
-        const goTo = (endIndex: number) => {
-            let path = node.slice(0, endIndex + 1).join("/")
-            props.router!.push(path == "" ? "/" : path)
-        }
+const map = (
+    items: string[],
+    nameDictionary: { [key: string]: string }) =>
+    items.map((el) =>
+        nameDictionary[el] != undefined ? nameDictionary[el] : el)
 
-        return { node, goTo, map }
-    }
-})
+const goTo = (endIndex: number) => {
+    let path = node.value.slice(0, endIndex + 1).join("/")
+    props.router!.push(path == "" ? "/" : path)
+}
 </script>
+
+<style>
+.breadcrumbs .item {
+    background-color: transparent;
+    border-style: none;
+}
+</style>

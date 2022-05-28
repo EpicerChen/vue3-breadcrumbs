@@ -1,29 +1,29 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import Breadcrumbs from './components/Breadcrumbs.vue'
-import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
-        name: 'home',
+        name: 'root',
         component: App
     },
     {
-        path: '/DcpDefinition/DcpDefinition/2bda45f9-8077-4c44-bcea-a84610c9a84e',
-        name: '2bda45f9-8077-4c44-bcea-a84610c9a84e',
+        path: '/a',
+        name: '1st',
         component: App
     },
     {
-        path: '/DcpDefinition/DcpDefinition',
-        name: 'DcpDefinitionDcpDefinition',
+        path: '/a/b',
+        name: '2nd',
         component: App
     },
     {
-        path: '/DcpDefinition',
-        name: 'DcpDefinition',
+        path: '/a/b/c',
+        name: '3rd',
         component: App
-    },
+    }
 ]
 
 const router = createRouter({

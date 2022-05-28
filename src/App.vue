@@ -1,19 +1,19 @@
-<script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
+<template>
+  <Breadcrumbs :route="route" :router="router" :name-dictionary='nameDictionary' />
+</template>
 
-import { useRouter } from 'vue-router';
+<script setup lang="ts">
+import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter()
-</script>
+const route = useRoute()
 
-<template>
-  <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
-  <!-- <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" /> -->
-  ----
-  <Breadcrumbs :path="'/DcpDefinition/DcpDefinition/2bda45f9-8077-4c44-bcea-a84610c9a84e'"
-    :name-dictionary='{ "DcpDefinition": "Dcp Definition" }' :router="router"></Breadcrumbs>
-</template>
+const nameDictionary = {
+  "a": "第一層",
+  "b": "第二層",
+  "c": "第三層"
+}
+</script>
 
 <style>
 #app {
