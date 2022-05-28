@@ -1,9 +1,9 @@
 <template>
     <span class="breadcrumbs" :class="'breadcrumbs-' + i"
-        v-for="(el, i) in nameDictionary != undefined ? map(node, nameDictionary) : node" :key="i">
+        v-for="(el, i) in nameDictionary != undefined ? map(nodes, nameDictionary) : nodes" :key="i">
         <span class="symbol" v-if="i > 0" v-html="symbol" />
         <button class="item" @click="goTo(i)">
-            {{ el == "" && i == 0 ? props.rootName : el }}
+            {{ el }}
         </button>
     </span>
 </template>
@@ -17,19 +17,23 @@ const props = withDefaults(
         route: RouteLocationNormalizedLoaded;
         router: Router;
         symbol?: string;
-        rootName?: string;
         nameDictionary?: {
             [key: string]: string
         };
     }>(),
     {
-        rootName: "/",
         symbol: " > ",
     })
 
 const fullpath = computed(() => { return props.route.fullPath })
-const node = computed(() =>
-    fullpath.value == "/" ? [props.rootName] : fullpath.value.split("/"))
+const nodes = computed(() => {
+    const rootName = "/"
+    if (fullpath.value == "/") return [rootName]
+
+    let nodes = fullpath.value.split("/")
+    nodes[0] = rootName
+    return nodes
+})
 
 const map = (
     items: string[],
@@ -38,7 +42,8 @@ const map = (
         nameDictionary[el] != undefined ? nameDictionary[el] : el)
 
 const goTo = (endIndex: number) => {
-    let path = node.value.slice(0, endIndex + 1).join("/")
+    nodes.value[0] = ""
+    let path = nodes.value.slice(0, endIndex + 1).join("/")
     props.router.push(path == "" ? "/" : path)
 }
 </script>

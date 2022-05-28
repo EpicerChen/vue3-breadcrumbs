@@ -9,6 +9,7 @@ const router = useRouter()
 const route = useRoute()
 
 const nameDictionary = {
+  "/":"home",
   "a": "第一層",
   "b": "第二層",
   "c": "第三層"
